@@ -1,221 +1,152 @@
-# YOLO People Counter
+# YOLO Contador de Pessoas
 
-A Python application that uses YOLO (You Only Look Once) deep learning model to detect and count people in images. This project provides a clean, organized structure for batch processing images and generating annotated results.
+Uma aplicação Python que usa o modelo de deep learning YOLO (You Only Look Once) para detectar e contar pessoas em imagens. Este projeto fornece uma estrutura limpa e organizada para processamento em lote de imagens e geração de resultados anotados.
 
-## Features
+## Funcionalidades
 
-- 🔍 **People Detection**: Uses YOLO11 models to detect people in images
-- 📊 **Batch Processing**: Process multiple images at once
-- 🎯 **High Accuracy**: Configurable confidence and IoU thresholds
-- 📁 **Organized Structure**: Clean separation of samples, results, and models
-- 🖥️ **GPU Support**: CUDA acceleration for faster processing
-- 📋 **Command Line Interface**: Easy-to-use CLI with multiple options
-- 🔄 **Error Handling**: Robust error handling and informative output
+- Detecção de Pessoas: Usa modelos YOLO11 para detectar pessoas em imagens
+- Processamento em Lote: Processa múltiplas imagens de uma vez
+- Alta Precisão: Thresholds de confiança e IoU configuráveis
+- Estrutura Organizada: Separação limpa de amostras, resultados e modelos
+- Suporte GPU: Aceleração CUDA para processamento mais rápido
+- Interface de Linha de Comando: CLI fácil de usar com múltiplas opções
+- Tratamento de Erros: Tratamento robusto de erros e saída informativa
 
-## Project Structure
+## Estrutura do Projeto
 
 ```
 yolo-count/
-├── main.py              # Main application script
-├── samples/             # Input images directory
-│   └── .gitkeep        # Keeps directory in git
-├── results/             # Output annotated images
-│   └── .gitkeep        # Keeps directory in git
-├── models/              # YOLO model files
-│   └── .gitkeep        # Keeps directory in git
-├── pyproject.toml       # Project dependencies
-├── uv.lock             # Lock file for dependencies
-├── .gitignore          # Git ignore rules
-└── README.md           # This file
+├── main.py              # Script principal da aplicação
+├── config.py            # Configurações
+├── samples/             # Diretório de imagens de entrada
+│   └── .gitkeep        # Mantém diretório no git
+├── results/             # Imagens anotadas de saída
+│   └── .gitkeep        # Mantém diretório no git
+├── models/              # Arquivos de modelo YOLO
+│   └── .gitkeep        # Mantém diretório no git
+├── pyproject.toml       # Dependências do projeto
+├── uv.lock             # Arquivo de lock das dependências
+├── requirements.txt     # Dependências para pip
+├── .gitignore          # Regras do git ignore
+└── README.md           # Este arquivo
 ```
 
-## Installation
+## Instalação
 
-### Prerequisites
+### Pré-requisitos
 
-- Python 3.8 or higher
-- CUDA-capable GPU (optional, for acceleration)
+- Python 3.8 ou superior
+- GPU compatível com CUDA (opcional, para aceleração)
 
-### Setup
+### Configuração
 
-1. **Clone the repository**:
+1. **Clone o repositório**:
    ```bash
-   git clone <repository-url>
-   cd yolo-count
+   git clone https://github.com/gabrielcesar-dev/ai-projects.git
+   cd ai-projects/yolo-count
    ```
 
-2. **Install dependencies using uv** (recommended):
+2. **Instale as dependências usando uv**:
    ```bash
    uv sync
    ```
 
-   Or using pip:
+   Ou usando pip:
    ```bash
-   pip install ultralytics opencv-python
+   pip install -r requirements.txt
    ```
 
-3. **Download YOLO models**:
-   ```bash
-   # The models will be automatically downloaded on first use
-   # Or manually download and place in models/ directory
-   ```
+3. **Os modelos YOLO serão baixados automaticamente no primeiro uso**
 
-## Usage
+## Uso
 
-### Basic Usage
+### Uso Básico
 
-1. **Place your images** in the `samples/` directory
-2. **Run the script**:
+1. **Coloque suas imagens** no diretório `samples/`
+2. **Execute o script**:
    ```bash
    python main.py
    ```
 
-### Command Line Options
+### Opções de Linha de Comando
 
 ```bash
-python main.py [OPTIONS]
+python main.py [OPÇÕES]
 
-Options:
-  --model PATH        Path to YOLO model (default: models/yolo11s.pt)
-  --samples DIR       Directory containing sample images (default: samples)
-  --results DIR       Directory to save results (default: results)
-  --device DEVICE     Device for inference (default: cuda:0)
-  --conf FLOAT        Confidence threshold (default: 0.3)
-  --iou FLOAT         IoU threshold (default: 0.3)
-  --show             Display processed images
-  --single FILE      Process single image file
-  --help             Show help message
+Opções:
+  --model PATH        Caminho para o modelo YOLO
+  --samples DIR       Diretório contendo imagens de amostra
+  --results DIR       Diretório para salvar resultados
+  --device DEVICE     Dispositivo para inferência
+  --conf FLOAT        Threshold de confiança
+  --iou FLOAT         Threshold IoU
+  --show             Exibir imagens processadas
+  --single FILE      Processar arquivo de imagem única
+  --help             Mostrar mensagem de ajuda
 ```
 
-### Examples
+## Configuração
 
-**Process all images in samples directory**:
-```bash
-python main.py
-```
+As configurações padrão podem ser modificadas no arquivo `config.py`:
 
-**Process with custom settings**:
-```bash
-python main.py --conf 0.5 --iou 0.4 --show
-```
+- `MODEL_PATH`: Caminho para o modelo YOLO
+- `DEVICE`: Dispositivo para inferência ('cuda:0' ou 'cpu')
+- `CONFIDENCE_THRESHOLD`: Threshold de confiança para detecção
+- `IOU_THRESHOLD`: Threshold IoU para NMS
+- `TARGET_SIZE`: Tamanho alvo para redimensionamento
+- `SAMPLES_DIR`: Diretório de amostras
+- `RESULTS_DIR`: Diretório de resultados
 
-**Process a single image**:
-```bash
-python main.py --single path/to/image.jpg --show
-```
-
-**Use CPU instead of GPU**:
-```bash
-python main.py --device cpu
-```
-
-**Use different model**:
-```bash
-python main.py --model models/yolo11n.pt
-```
-
-## Model Information
-
-This project supports YOLO11 models:
-
-- **yolo11n.pt**: Nano model (fastest, least accurate)
-- **yolo11s.pt**: Small model (balanced speed/accuracy) - Default
-- **yolo11m.pt**: Medium model (more accurate, slower)
-- **yolo11l.pt**: Large model (high accuracy, slow)
-- **yolo11x.pt**: Extra Large model (highest accuracy, slowest)
-
-Models are automatically downloaded from Ultralytics on first use.
-
-## Output
-
-The application generates:
-
-1. **Annotated Images**: Saved in `results/` directory with bounding boxes and confidence scores
-2. **Console Output**: Detection counts and processing summary
-3. **Batch Summary**: Total people count across all processed images
-
-### Sample Output
-
-```
-📁 Processing 3 images from samples
-------------------------------------------------------------
-✓ Processed: image1.jpg -> 2 people detected
-✓ Processed: image2.jpg -> 5 people detected  
-✓ Processed: image3.jpg -> 1 people detected
-------------------------------------------------------------
-📊 Summary: 8 total people detected across 3 images
-```
-
-## Configuration
-
-### Supported Image Formats
+### Formatos de Imagem Suportados
 
 - JPEG (.jpg, .jpeg)
 - PNG (.png)
 - BMP (.bmp)
 - TIFF (.tiff, .tif)
 
-### Performance Tuning
+## Informações do Modelo
 
-- **Confidence Threshold**: Lower values detect more objects but may include false positives
-- **IoU Threshold**: Controls overlap tolerance in Non-Maximum Suppression
-- **Device Selection**: Use `cuda:0` for GPU acceleration, `cpu` for CPU-only
-- **Model Selection**: Balance between speed and accuracy based on your needs
+Este projeto suporta modelos YOLO11:
 
-## Development
+- **yolo11n.pt**: Modelo Nano (mais rápido, menos preciso)
+- **yolo11s.pt**: Modelo Small (balanceado velocidade/precisão) - Padrão
+- **yolo11m.pt**: Modelo Medium (mais preciso, mais lento)
+- **yolo11l.pt**: Modelo Large (alta precisão, lento)
+- **yolo11x.pt**: Modelo Extra Large (maior precisão, mais lento)
 
-### Adding New Features
+## Saída
 
-The code is organized in a class-based structure for easy extension:
+A aplicação gera:
 
-- `PeopleCounter` class: Main detection logic
-- `process_image()`: Single image processing
-- `process_batch()`: Batch processing logic
-- `main()`: CLI interface
+1. **Imagens Anotadas**: Salvas no diretório `results/` com caixas delimitadoras e pontuações de confiança
+2. **Saída do Console**: Contagens de detecção e resumo de processamento
+3. **Resumo em Lote**: Contagem total de pessoas em todas as imagens processadas
 
-### Error Handling
+## Licença YOLO
 
-The application includes comprehensive error handling for:
+Este projeto utiliza os modelos YOLO da Ultralytics, que estão disponíveis sob diferentes opções de licenciamento:
 
-- Missing model files
-- Invalid image files
-- CUDA availability issues
-- File I/O errors
+### AGPL-3.0 (Licença Usada Neste Projeto)
 
-## Troubleshooting
+- **Para quem**: Estudantes, pesquisadores e entusiastas
+- **Tipo**: Licença open-source aprovada pela OSI
+- **Requisitos**: Projetos que usam componentes AGPL-3.0 devem ser open-source
+- **Uso comercial**: Permitido, mas deve manter o código aberto
+- **Distribuição**: Código fonte deve estar disponível
 
-### Common Issues
+### Outras Opções de Licenciamento
 
-1. **CUDA out of memory**: Use `--device cpu` or smaller batch sizes
-2. **Model not found**: Ensure model files are in the `models/` directory
-3. **No images detected**: Check image file extensions and directory paths
-4. **Permission errors**: Ensure write permissions for `results/` directory
+- **Ultralytics Enterprise**: Para uso comercial sem requisitos open-source
+- **Ultralytics Academic**: Para universidades e instituições de pesquisa
+- **Características**: Controle total, propriedade privada, suporte personalizado
 
-### Dependencies Issues
+### Importante
 
-If you encounter dependency issues:
+Se você pretende usar este projeto para fins comerciais e não deseja abrir o código fonte, considere adquirir uma licença Enterprise da Ultralytics.
 
-```bash
-# Update ultralytics
-pip install --upgrade ultralytics
+Para mais informações sobre licenciamento, visite: [ultralytics.com/license](https://www.ultralytics.com/license)
 
-# Reinstall OpenCV
-pip install --force-reinstall opencv-python
-```
+## Agradecimentos
 
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
-
-## License
-
-This project is open source and available under the MIT License.
-
-## Acknowledgments
-
-- [Ultralytics YOLO](https://github.com/ultralytics/ultralytics) for the YOLO implementation
-- [OpenCV](https://opencv.org/) for image processing capabilities
+- [Ultralytics YOLO](https://github.com/ultralytics/ultralytics) pela implementação do YOLO
+- [OpenCV](https://opencv.org/) pelas capacidades de processamento de imagem
